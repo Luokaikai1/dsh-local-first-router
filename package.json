@@ -1,0 +1,38 @@
+{
+  "name": "dsh-ollama-kaiyuanjl",
+  "version": "0.1.0",
+  "description": "dsh先调用本地部署并会询问要不要扩展上下文，本地不行然后才自动调用云端兜底",
+  "license": "MIT",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "ollama",
+    "local-first",
+    "model-router",
+    "cordis"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "*",
+    "@deepseek-ai/schemastery": "*"
+  }
+}
