@@ -119,17 +119,21 @@ dsh plugin --profile <profile> add file:<path-to-this-repo>
 
 ## 把任务委派给本地/免费云端模型
 
-插件本身不带委派工具；委派走 DSH 内置的 `subagent`。在 profile 里打开子代理的模型选择：
+委派用 DSH 内置的 `workflow`（常驻工具，无需额外插件）：给每个子任务单独指定 `provider`/`model`，子任务在独立会话里跑完把结果带回来。
 
-```yaml
-- id: tool-subagent
-  config:
-    provider: spawn
-    toolName: subagent
-    modelSelectionSettings: true
+```js
+const r = await agent('把这段日志总结成三条', {
+  provider: 'local-ollama',
+  model: 'qwen2.5:7b-24k',
+  label: 'local-summary',
+});
 ```
 
-重启后即可在 `subagent` 调用里指定 `provider`/`model`，例如本地 `local-ollama/qwen2.5:7b-24k`、免费云端 `zhipu-glm/glm-4.7-flash`。子代理是独立会话，结果回到父会话，后续可用 `send_message` 继续；未指定模型时沿用父会话。
+- 本地：`local-ollama/qwen2.5:7b-24k`
+- 免费云端：`zhipu-glm/glm-4.7-flash`
+- 付费云端：`deepseek-account/deepseek-flash`（受余额与审批约束）
+
+`subagent` 工具默认继承父会话模型；它的“按调用选模型”需要额外的 host 设置服务，默认部署没有，不要依赖它做选型。
 
 ## 敏感信息
 
