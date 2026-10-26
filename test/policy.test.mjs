@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { isPeakBeijing, beijingDate } from '../lib/peak.js';
-import { decide, gateCheck, isForcedLocal, normalizeConfig } from '../lib/policy.js';
+import { decide, gateCheck, isChatSession, isForcedLocal, normalizeConfig } from '../lib/policy.js';
 
 const bj = (iso) => Date.parse(`${iso}+08:00`);
 
@@ -60,6 +60,14 @@ test('decide: long turn triggers escalation', () => {
   const cfg = normalizeConfig({ escalateAfterStep: 3 });
   const state = { toolErrors: 0, repeatedCalls: 0, localErrors: 0, cloud: false, cloudReason: '' };
   assert.deepEqual(decide(cfg, state, 3, { ok: true }), { action: 'cloud', reason: 'long-turn' });
+});
+
+test('chat sessions match by id prefix', () => {
+  const cfg = normalizeConfig({ localSessionPrefixes: ['onebot-group-'] });
+  assert.equal(isChatSession(cfg, 'onebot-group-123456789'), true);
+  assert.equal(isChatSession(cfg, 'onebot-group-123456789-a1b2c3d4'), true);
+  assert.equal(isChatSession(cfg, 'session-a7f89ee2'), false);
+  assert.equal(isChatSession(normalizeConfig({}), 'onebot-group-1'), false);
 });
 
 test('forced local: global switch and workspace path matching', () => {
