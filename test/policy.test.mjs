@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { isPeakBeijing, beijingDate } from '../lib/peak.js';
-import { decide, gateCheck, normalizeConfig } from '../lib/policy.js';
+import { decide, gateCheck, isForcedLocal, normalizeConfig } from '../lib/policy.js';
 
 const bj = (iso) => Date.parse(`${iso}+08:00`);
 
@@ -60,4 +60,13 @@ test('decide: long turn triggers escalation', () => {
   const cfg = normalizeConfig({ escalateAfterStep: 3 });
   const state = { toolErrors: 0, repeatedCalls: 0, localErrors: 0, cloud: false, cloudReason: '' };
   assert.deepEqual(decide(cfg, state, 3, { ok: true }), { action: 'cloud', reason: 'long-turn' });
+});
+
+test('forced local: global switch and workspace path matching', () => {
+  const byPath = normalizeConfig({ forceLocalPaths: ['C:\\Users\\x\\workspace-qq'] });
+  assert.equal(isForcedLocal(byPath, 'C:\\Users\\x\\workspace-qq'), true);
+  assert.equal(isForcedLocal(byPath, 'C:/Users/X/workspace-qq/'), true);
+  assert.equal(isForcedLocal(byPath, 'C:\\Users\\x\\profiles\\qqchat'), false);
+  assert.equal(isForcedLocal(normalizeConfig({ forceLocal: true }), 'C:\\anything'), true);
+  assert.equal(isForcedLocal(normalizeConfig({}), 'C:\\anything'), false);
 });

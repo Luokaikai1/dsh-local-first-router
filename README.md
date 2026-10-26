@@ -98,6 +98,22 @@ dsh plugin --profile <profile> add file:<path-to-this-repo>
 
 云端 provider（DeepSeek 账户、智谱等）用 DSH 自带的「设置 → 模型」接入即可；**密钥由 DSH 凭据系统保存，插件不读取也不写入任何密钥**。
 
+## 强制本地（QQ 等聊天渠道）
+
+日常聊天不需要云端。把对应工作区加进 `forceLocalPaths`，该工作区的所有会话（例如 QQ 机器人）就**永远只走本地**，不升级、不问额度：
+
+```yaml
+- id: local-first-router
+  config:
+    forceLocal: false          # true = 所有会话强制本地
+    forceLocalPaths:
+      - C:\Users\you\.dsh\workspace-qq
+```
+
+- 路径匹配不区分大小写、`/` 与 `\` 都行。
+- 强制本地优先于手动模型选择：在这些会话里切到云端模型也会被拉回本地。
+- 工作/编码会话不加进列表即可：它们仍按“本地优先，卡住才升级”的策略走。
+
 ## 本地上下文
 
 Ollama 默认 `num_ctx` 往往只有 4096，而 DSH 的系统提示 + 工具定义就可能到 9k，直接截断。插件提供两种处理：
