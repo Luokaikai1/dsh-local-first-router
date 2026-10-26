@@ -88,7 +88,8 @@ dsh plugin --profile <profile> add file:<path-to-this-repo>
         baseURL: http://127.0.0.1:11434/v1
         apiKeyEnv: LOCAL_OLLAMA_API_KEY
         headers:
-          authorization: Bearer ollama
+          # 本地 Ollama 通常不校验；这里只是占位，不要填真实云端密钥
+          authorization: Bearer ${LOCAL_OLLAMA_API_KEY}
         models:
           - id: qwen2.5:7b-24k
             contextWindow: 24576
@@ -115,6 +116,24 @@ dsh plugin --profile <profile> add file:<path-to-this-repo>
   `set_cloud_policy(allowCloud=true, scope=turn)` 才允许本轮云端兜底。
 - 手动切换到云端模型视为用户已同意，插件不拦截。
 - 工作/编码会话不受影响，仍按“本地优先，卡住才升级”的策略走。
+
+## 把任务委派给本地/免费云端模型
+
+插件本身不带委派工具；委派走 DSH 内置的 `subagent`。在 profile 里打开子代理的模型选择：
+
+```yaml
+- id: tool-subagent
+  config:
+    provider: spawn
+    toolName: subagent
+    modelSelectionSettings: true
+```
+
+重启后即可在 `subagent` 调用里指定 `provider`/`model`，例如本地 `local-ollama/qwen2.5:7b-24k`、免费云端 `zhipu-glm/glm-4.7-flash`。子代理是独立会话，结果回到父会话，后续可用 `send_message` 继续；未指定模型时沿用父会话。
+
+## 敏感信息
+
+仓库不包含 API Key、QQ 号、个人目录；示例中的 `127.0.0.1:11434` 是 Ollama 的默认本地地址，可按需替换。云端密钥由 DSH 凭据系统保存，插件不读取也不写入任何密钥。
 
 ### 人设防丢（长会话截断）
 
