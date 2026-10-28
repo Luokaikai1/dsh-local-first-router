@@ -1,4 +1,4 @@
-# dsh-ollama-kaiyuanjl
+# dsh-local-first-router
 
 一个 DeepSeek Harness（DSH）插件：**先跑本地 Ollama 模型，第一次启动会询问要不要扩展上下文；本地不行才自动走云端兜底**，并且云端只在谷期、额度够、且你允许付费时才会用。
 
@@ -45,7 +45,7 @@
 ## 安装
 
 ```bash
-dsh plugin --profile <profile> add github:<owner>/dsh-ollama-kaiyuanjl
+dsh plugin --profile <profile> add github:<owner>/dsh-local-first-router
 ```
 
 或本地目录：

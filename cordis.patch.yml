@@ -1,6 +1,6 @@
-# dsh-ollama-kaiyuanjl: local-first routing with an advisor, an optional
+# dsh-local-first-router: local-first routing with an advisor, an optional
 # widened local context, and a quota-aware cloud fallback.
 # The profile layer targets `id: local-first-router` to override the config.
 - insert:
     - id: local-first-router
-      name: dsh-ollama-kaiyuanjl
+      name: dsh-local-first-router
