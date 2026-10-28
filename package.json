@@ -1,3 +1,38 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:53bbbcf069f013677a89fa7de41809ee0b32dfa722600fa00db6ee5dd6fdb8cc
-size 758
+{
+  "name": "dsh-local-first-router",
+  "version": "0.1.0",
+  "description": "DSH 插件：先跑本地 Ollama，本地不行再按额度策略走云端兜底（三层路由：执行体 / 顾问 / 云端兜底）",
+  "license": "MIT",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "ollama",
+    "local-first",
+    "model-router",
+    "cordis"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "*",
+    "@deepseek-ai/schemastery": "*"
+  }
+}
